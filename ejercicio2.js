@@ -39,11 +39,11 @@ function init() {
     scene.add(axes);
    
     Cubo = []; //define un array unidimensional
-    dim = 10; //valor inicial de las dimensiones de los cubos
-    angulo = Math.PI/4; //valor del angulo de giro
-    d2 = dim/2
-    di = Math.sqrt(Math.pow(d2, 2)+Math.pow(d2, 2));
-    desplazamiento = di - d2;
+    dim = 10    ; //valor inicial de las dimensiones de los cubos
+    angulo = Math.PI/10; //valor del angulo de giro
+    del = dim/2; //valor de la mitad de la dimensión del cubo
+    dia = Math.sqrt(Math.pow(del, 2)+Math.pow(del, 2));//variable para hallar la diagonal del área de la cara del cubo
+    ndel = (Math.cos((Math.PI/4)-angulo))*dia;//transalación según la dimensión y angulo de  giro del cubo
 
     Cubo.push(cubo(dim, dim, dim, 0xFF0000, 'Physical', false));
     Cubo.push(cubo(dim, dim, dim, 0xFFDD00, 'Physical', false));
@@ -51,24 +51,24 @@ function init() {
 
     //un ciclo for para optimizar la creación de los cubos y hacer sus respectivas transformaciones
     for(i=0; i < 3; i++){
-        Cubo[i].translateX(desplazamiento); //translada el cubo en el eje x las unidades nesesarias para que el vértice del primer cubo toque el eje x según el ángulo rotado
-        Cubo[i].translateY(dim/2); //translada el cubo en el eje y 5 unidades
-        Cubo[i].translateZ(desplazamiento); //translada el cubo en el eje z las unidades necesarias para que el vértice del primer cubo toque el eje z según el ángulo rotado
+        Cubo[i].translateX(ndel); //translada el cubo en el eje x las unidades nesesarias para que el vértice del primer cubo toque el eje x según el ángulo rotado
+        Cubo[i].translateY(del); //translada el cubo en el eje y según la variable del
+        Cubo[i].translateZ(ndel); //translada el cubo en el eje z las unidades necesarias para que el vértice del primer cubo toque el eje z según el ángulo rotado
+    }
+
+    for(i=1; i < 3; i++){
+        tam=((1)/(dim/(del/i)));//varaible para definir la mitad del tamaño del cubo anterior
+        al=((del-2)*(1+i));//variable que se usará para transaladar en el eje y los cubos
+        Cubo[i].scale.set(tam, tam, tam);//el cubo se escala según el tamaño (tam)  
+        Cubo[i].translateY(al);//se translada el cubo en el eje y según la altura (al)
     }
 
     for(i=0; i < 3; i++){
-        if(i==1 || i==2){
-            escala=1/(2*i);//valor del porcentaje de escala a reducir
-            unidades=(dim/2)+(dim/4)+((((dim/2)+(dim/4))/2))*(i-1);//da la posición respectiva a cada cubo
-            Cubo[i].scale.set(escala, escala, escala); //cambia la posición de los cubos respectivamente
-            Cubo[i].translateY(unidades); //translada el cubo en el eje y para que quede arriba del cubo anterior
+        if(i==0 || i==2){
+            Cubo[i].rotateY(angulo); //rota el cubo en el eje y según el angulo
         }
     }
 
-    Cubo[0].rotateY(angulo);//rota el cubo 1 según el valor del ángulo
-    Cubo[2].rotateY(angulo);//rota el cubo 3 según el valor del ángulo
-
-  
     light = new THREE.PointLight(0xFFFFFF);
     light2 = new THREE.PointLight(0xFFFFFF);
                                         
